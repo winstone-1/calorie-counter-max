@@ -78,7 +78,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'calorie_db',
         'USER': 'postgres',
-        'PASSWORD': 'your_password_here',  
+        'PASSWORD': 'Winstone@1',  
         'HOST': 'localhost',
         'PORT': '5432',
     }
