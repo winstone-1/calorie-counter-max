@@ -1,0 +1,104 @@
+{% extends 'calorie_tracker/base.html' %}
+
+{% block content %}
+
+<!-- Daily Goal Progress -->
+{% with goal=2000 %}
+{% with percentage=total_calories|floatformat:0 %}
+
+<div class="mb-6">
+    <div class="flex justify-between items-center mb-2">
+        <span class="text-sm text-gray-400">Daily Goal</span>
+        <span class="text-sm text-gray-400">{{ total_calories }} / 2000 kcal</span>
+    </div>
+    <div class="h-3 rounded-full transition-all duration-500 {% if total_calories >= 2000 %}bg-red-500{% elif total_calories >= 1500 %}bg-yellow-400{% else %}bg-emerald-500{% endif %}" style="width: {% widthratio total_calories 2000 100 %}%"></div>
+    <p class="text-xs text-gray-500 mt-1">
+        {% if total_calories >= 2000 %}
+            ⚠️ Daily goal reached
+        {% else %}
+            {{ 2000|add:total_calories|add:"-2000" }} kcal remaining — 
+            {% widthratio total_calories 2000 100 %}% of goal
+        {% endif %}
+    </p>
+</div>
+
+{% endwith %}
+{% endwith %}
+
+<!-- Total Calories Card -->
+<div class="bg-gray-800 rounded-2xl border border-gray-700 p-6 mb-6 text-center">
+    <p class="text-sm text-gray-400 mb-1">Today's Total</p>
+    <p class="text-6xl font-bold
+        {% if total_calories >= 2000 %}text-red-400
+        {% elif total_calories >= 1500 %}text-yellow-400
+        {% else %}text-emerald-400{% endif %}">
+        {{ total_calories }}
+    </p>
+    <p class="text-gray-500 text-sm mt-1">kcal consumed</p>
+</div>
+
+<!-- Add Food Form -->
+<div class="bg-gray-800 rounded-2xl border border-gray-700 p-6 mb-6">
+    <h2 class="text-base font-semibold text-gray-200 mb-4">Add Food Item</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="flex gap-3">
+            <input
+                type="text"
+                name="name"
+                placeholder="Food name e.g Banana"
+                required
+                class="flex-1 bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            >
+            <input
+                type="number"
+                name="calories"
+                placeholder="kcal"
+                required
+                min="1"
+                class="w-24 bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            >
+            <button
+                type="submit"
+                class="bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium px-5 py-2 rounded-xl transition"
+            >
+                Add
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Food List -->
+<div class="bg-gray-800 rounded-2xl border border-gray-700 p-6">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-base font-semibold text-gray-200">Today's Foods</h2>
+        {% if food_items %}
+        <a href="{% url 'reset' %}"
+           onclick="return confirm('Reset all entries for today?')"
+           class="text-xs text-red-400 hover:text-red-300 transition">
+            Reset Day
+        </a>
+        {% endif %}
+    </div>
+
+    {% if food_items %}
+        <ul class="divide-y divide-gray-700">
+            {% for item in food_items %}
+            <li class="flex justify-between items-center py-3">
+                <span class="text-sm text-gray-300">{{ item.name }}</span>
+                <div class="flex items-center gap-4">
+                    <span class="text-sm font-medium text-emerald-400">{{ item.calories }} kcal</span>
+                    <a href="{% url 'delete_item' item.id %}"
+                       class="text-xs text-red-400 hover:text-red-300 transition">
+                        Remove
+                    </a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-sm text-gray-500 text-center py-6">No food items added yet today.</p>
+    {% endif %}
+</div>
+
+{% endblock %}
