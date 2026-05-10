@@ -2,36 +2,32 @@
 
 {% block content %}
 
-<!-- Daily Goal Progress -->
-{% with goal=2000 %}
-{% with percentage=total_calories|floatformat:0 %}
+{% with remaining=2000|add:"-"|add:total_calories %}
 
+<!-- Daily Goal Progress -->
 <div class="mb-6">
     <div class="flex justify-between items-center mb-2">
         <span class="text-sm text-gray-400">Daily Goal</span>
         <span class="text-sm text-gray-400">{{ total_calories }} / 2000 kcal</span>
     </div>
-    <div class="h-3 rounded-full transition-all duration-500 {% if total_calories >= 2000 %}bg-red-500{% elif total_calories >= 1500 %}bg-yellow-400{% else %}bg-emerald-500{% endif %}" style="width: {% widthratio total_calories 2000 100 %}%"></div>
+    <div class="w-full bg-gray-700 rounded-full h-3">
+        <div class="h-3 rounded-full transition-all duration-500 {% if total_calories >= 2000 %}bg-red-500{% elif total_calories >= 1500 %}bg-yellow-400{% else %}bg-emerald-500{% endif %}" style="width: {% widthratio total_calories 2000 100 %}%"></div>
+    </div>
     <p class="text-xs text-gray-500 mt-1">
         {% if total_calories >= 2000 %}
             ⚠️ Daily goal reached
         {% else %}
-            {{ 2000|add:total_calories|add:"-2000" }} kcal remaining — 
-            {% widthratio total_calories 2000 100 %}% of goal
+            {% widthratio total_calories 2000 100 %}% of daily goal
         {% endif %}
     </p>
 </div>
 
 {% endwith %}
-{% endwith %}
 
 <!-- Total Calories Card -->
 <div class="bg-gray-800 rounded-2xl border border-gray-700 p-6 mb-6 text-center">
     <p class="text-sm text-gray-400 mb-1">Today's Total</p>
-    <p class="text-6xl font-bold
-        {% if total_calories >= 2000 %}text-red-400
-        {% elif total_calories >= 1500 %}text-yellow-400
-        {% else %}text-emerald-400{% endif %}">
+    <p class="text-6xl font-bold {% if total_calories >= 2000 %}text-red-400{% elif total_calories >= 1500 %}text-yellow-400{% else %}text-emerald-400{% endif %}">
         {{ total_calories }}
     </p>
     <p class="text-gray-500 text-sm mt-1">kcal consumed</p>
