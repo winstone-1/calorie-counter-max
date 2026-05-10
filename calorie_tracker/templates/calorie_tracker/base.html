@@ -23,7 +23,7 @@
         <span id="toast-message"></span>
     </div>
 
-    <script>
+   <script>
         function showToast(message, duration = 3000) {
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toast-message');
@@ -35,13 +35,10 @@
                 toast.classList.add('opacity-0');
             }, duration);
         }
-
-        function confirmReset() {
-            if (confirm('Reset all entries for today?')) {
-                window.location.href = "{% block reset_url %}{% endblock %}";
-            }
-        }
     </script>
+
+</body>
+</html>
 
 </body>
 </html>
