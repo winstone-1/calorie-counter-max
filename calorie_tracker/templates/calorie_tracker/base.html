@@ -18,5 +18,30 @@
         {% block content %}{% endblock %}
     </main>
 
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-gray-800 border border-gray-700 text-gray-100 text-sm px-5 py-3 rounded-xl shadow-lg opacity-0 transition-opacity duration-300 pointer-events-none">
+        <span id="toast-message"></span>
+    </div>
+
+    <script>
+        function showToast(message, duration = 3000) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            toastMessage.textContent = message;
+            toast.classList.remove('opacity-0');
+            toast.classList.add('opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0');
+            }, duration);
+        }
+
+        function confirmReset() {
+            if (confirm('Reset all entries for today?')) {
+                window.location.href = "{% block reset_url %}{% endblock %}";
+            }
+        }
+    </script>
+
 </body>
 </html>

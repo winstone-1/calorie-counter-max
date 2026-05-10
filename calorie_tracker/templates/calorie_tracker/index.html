@@ -5,23 +5,25 @@
 {% with remaining=2000|add:"-"|add:total_calories %}
 
 <!-- Daily Goal Progress -->
+<!-- Daily Goal Progress -->
 <div class="mb-6">
     <div class="flex justify-between items-center mb-2">
         <span class="text-sm text-gray-400">Daily Goal</span>
-        <span class="text-sm text-gray-400">{{ total_calories }} / 2000 kcal</span>
+        <span class="text-sm text-gray-400">{{ total_calories }} / {{ daily_goal }} kcal</span>
     </div>
     <div class="w-full bg-gray-700 rounded-full h-3">
-        <div class="h-3 rounded-full transition-all duration-500 {% if total_calories >= 2000 %}bg-red-500{% elif total_calories >= 1500 %}bg-yellow-400{% else %}bg-emerald-500{% endif %}" style="width: {% widthratio total_calories 2000 100 %}%"></div>
+        <div class="h-3 rounded-full transition-all duration-500 {% if total_calories >= daily_goal %}bg-red-500{% elif total_calories >= 1500 %}bg-yellow-400{% else %}bg-emerald-500{% endif %}"
+            style="width: {{ percentage }}%">
+        </div>
     </div>
     <p class="text-xs text-gray-500 mt-1">
-        {% if total_calories >= 2000 %}
-            ⚠️ Daily goal reached
+        {% if total_calories >= daily_goal %}
+            Daily goal reached
         {% else %}
-            {% widthratio total_calories 2000 100 %}% of daily goal
+            {{ remaining }} kcal remaining — {{ percentage }}% of goal
         {% endif %}
     </p>
 </div>
-
 {% endwith %}
 
 <!-- Total Calories Card -->

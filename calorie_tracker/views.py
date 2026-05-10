@@ -9,20 +9,26 @@ def index(request):
     Also handles adding a new food item via POST request.
     """
     today = timezone.now().date()
-    food_items = FoodItem.objects.filter(date_added=today)  # only today's items
-    total_calories = sum(item.calories for item in food_items)  # add them all up
+    food_items = FoodItem.objects.filter(date_added=today)
+    total_calories = sum(item.calories for item in food_items)
+
+    DAILY_GOAL = 2000
+    remaining = max(DAILY_GOAL - total_calories, 0)       # never goes below 0
+    percentage = min(int((total_calories / DAILY_GOAL) * 100), 100)  # cap at 100%
 
     if request.method == 'POST':
         name = request.POST.get('name')
         calories = request.POST.get('calories')
-
         if name and calories:
             FoodItem.objects.create(name=name, calories=int(calories), date_added=today)
-        return redirect('index')  # refresh the page after adding
+        return redirect('index')
 
     return render(request, 'calorie_tracker/index.html', {
         'food_items': food_items,
         'total_calories': total_calories,
+        'remaining': remaining,
+        'percentage': percentage,
+        'daily_goal': DAILY_GOAL,
         'today': today,
     })
 
