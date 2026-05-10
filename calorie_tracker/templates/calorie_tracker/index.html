@@ -71,11 +71,9 @@
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-base font-semibold text-gray-200">Today's Foods</h2>
         {% if food_items %}
-        <a href="{% url 'reset' %}"
-           onclick="return confirm('Reset all entries for today?')"
-           class="text-xs text-red-400 hover:text-red-300 transition">
-            Reset Day
-        </a>
+        <button onclick="confirmReset()" class="text-xs text-red-400 hover:text-red-300 transition">
+    Reset Day
+</button>
         {% endif %}
     </div>
 
@@ -98,5 +96,18 @@
         <p class="text-sm text-gray-500 text-center py-6">No food items added yet today.</p>
     {% endif %}
 </div>
+<script>
+    // Show toast on page load if item was just added or deleted
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('added')) showToast('Food item added');
+    if (urlParams.get('deleted')) showToast('Food item removed');
+    if (urlParams.get('reset')) showToast('Day has been reset');
 
+    function confirmReset() {
+        showToast('Resetting...');
+        setTimeout(() => {
+            window.location.href = "{% url 'reset' %}";
+        }, 800);
+    }
+</script>
 {% endblock %}
